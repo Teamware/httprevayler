@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 public class SimpleRequest implements Serializable {
 
@@ -18,6 +19,10 @@ public class SimpleRequest implements Serializable {
 	private Map<String, String[]> _parameterMap;
 	private Cookie[] _cookies;
 
+	transient private final HttpSession _session;
+
+	transient private HttpServletRequest _request;
+
 
 	public SimpleRequest(HttpServletRequest request) {
 		_requestURI = request.getRequestURI();
@@ -25,6 +30,10 @@ public class SimpleRequest implements Serializable {
 		_method = request.getMethod();
 		_parameterMap = request.getParameterMap();
 		_cookies = request.getCookies();
+		
+		//FIXME JEB SocialAuth
+		_session = request.getSession();
+		_request = request;
 		
 		/*Enumeration<String> parameterNames = request.getParameterNames();
 		System.out.println("Params:");
@@ -68,6 +77,14 @@ public class SimpleRequest implements Serializable {
 	
 	public Cookie[] getCookies() {
 		return _cookies;
+	}
+
+	public HttpSession getSession() {
+		return _session;
+	}
+	
+	public HttpServletRequest getRequest() {
+		return _request;
 	}
 	
 }

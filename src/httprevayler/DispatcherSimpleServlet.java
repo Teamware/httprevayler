@@ -22,6 +22,11 @@ public class DispatcherSimpleServlet implements SimpleServlet {
 	@Override
 	public void service(SimpleRequest simpleRequest, SimpleResponse simpleResponse)
 			throws Exception {
+
+		if(!isApiRequest(simpleRequest)) {
+			simpleResponse.setStatus(404);
+			return;
+		}
 		
 		String requestURI = afterBaseUri(simpleRequest.getRequestURI());
 		my(Logger.class).log(simpleRequest.getMethod() + ": " + requestURI);
@@ -36,6 +41,10 @@ public class DispatcherSimpleServlet implements SimpleServlet {
 			simpleResponse.setStatus(Response.SC_NOT_FOUND);
 			simpleResponse.getWriter().write("Error: " + e.getMessage());
 		}
+	}
+
+	private boolean isApiRequest(SimpleRequest simpleRequest) {
+		return simpleRequest.getRequestURI().startsWith(_baseUri);
 	}
 
 	private String resourceClassNameFor(String requestURI) {
