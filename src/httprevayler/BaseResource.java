@@ -1,10 +1,11 @@
 package httprevayler;
 
-import org.eclipse.jetty.server.Response;
-
 import flexjson.JSONSerializer;
 import httprevayler.simpleservlet.SimpleRequest;
 import httprevayler.simpleservlet.SimpleResponse;
+
+import org.eclipse.jetty.server.Response;
+
 
 public abstract class BaseResource {
 	protected SimpleRequest _request;
@@ -13,7 +14,7 @@ public abstract class BaseResource {
 	public void service(SimpleRequest simpleRequest, SimpleResponse simpleResponse) throws Exception {
 		configure(simpleRequest, simpleResponse);
 		String method = simpleRequest.getMethod();
-		
+
 		beforeService();
 		
 		if (method.equals("GET")) respondToGet();
@@ -53,6 +54,10 @@ public abstract class BaseResource {
 	protected void writeEncoded(Object response) throws Exception {
 		JSONSerializer serializer = new JSONSerializer();
 		_response.writeEncodedResponse(serializer.serialize(response));
+	}
+
+	protected String getParam(String parameterName) {
+		return _request.getParameter(parameterName);
 	}
 
 }
